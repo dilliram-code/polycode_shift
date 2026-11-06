@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  polyshift:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: polyshift_engine
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - EXECUTION_TIMEOUT_SECONDS=5
+      - MAX_CODE_SIZE_BYTES=1048576
+    volumes:
+      - polyshift_data:/app/backend/data
+    restart: unless-stopped
+
+volumes:
+  polyshift_data:
