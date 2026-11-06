@@ -1,9 +1,12 @@
 """
 PolyShift - Database Models
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, Text, Float, DateTime, Boolean
 from app.database.db import Base
+
+def utc_now():
+    return datetime.now(timezone.utc)
 
 class TranslationHistory(Base):
     __tablename__ = "translation_history"
@@ -16,7 +19,7 @@ class TranslationHistory(Base):
     translation_status = Column(String(50), default="success") # success, warning, approx
     confidence_score = Column(Float, default=1.0)
     warnings_json = Column(Text, nullable=True) # JSON list
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=utc_now, index=True)
     is_bookmarked = Column(Boolean, default=False)
     title = Column(String(200), nullable=True)
 
