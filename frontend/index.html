@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolyShift — Universal Code Translation Engine</title>
+  
+  <!-- Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/static/css/themes.css">
+  <link rel="stylesheet" href="/static/css/animations.css">
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/editor.css">
+  <link rel="stylesheet" href="/static/css/responsive.css">
+
+  <!-- Monaco Editor AMD Loader from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+
+  <!-- Ambient Glowing Background Orbs -->
+  <div class="ambient-glow-container">
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+  </div>
+
+  <div id="app">
+    <!-- App Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">Ψ</div>
+        <div class="brand-name">PolyShift</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-view-target="landing">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-item" data-view-target="translator">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span>Code Translator</span>
+        </a>
+        <a class="nav-item" data-view-target="explainer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>Code Explainer</span>
+        </a>
+        <a class="nav-item" data-view-target="optimizer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Code Optimizer</span>
+        </a>
+        <a class="nav-item" data-view-target="comparison">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Code Diff</span>
+        </a>
+        <a class="nav-item" data-view-target="examples">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>Example Library</span>
+        </a>
+        <a class="nav-item" data-view-target="history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+          <span>History</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+          <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--color-status-success); display: inline-block;"></span>
+          <span>Engine v1.0.0</span>
+        </div>
+        <button id="btn-open-settings" class="btn-icon" title="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- App Main Container -->
+    <div class="app-main">
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="nav-left">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search functions, snippets, history..." id="global-search-input">
+          </div>
+        </div>
+
+        <div class="nav-right">
+          <button id="btn-open-shortcuts" class="btn btn-secondary" style="height: 32px; padding: 0 10px; font-size: 12px;" title="Keyboard Shortcuts">
+            <kbd style="background:var(--bg-surface-active);padding:1px 5px;border-radius:3px;font-size:11px;font-family:var(--font-mono);">⌘K</kbd>
+            <span>Shortcuts</span>
+          </button>
+          
+          <button id="theme-toggle-btn" class="btn-icon" title="Toggle Theme">
+            <span id="theme-toggle-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </span>
+          </button>
+
+          <span class="badge badge-success">AST ENGINE ACTIVE</span>
+        </div>
+      </header>
+
+      <!-- View Panes Container -->
+      <main class="view-container">
+
+        <!-- VIEW 1: LANDING & DASHBOARD -->
+        <section id="view-landing" class="view-pane active">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 48px 24px; width: 100%;">
+            <!-- Hero -->
+            <div style="text-align: center; margin-bottom: 56px;">
+              <span class="badge badge-primary" style="margin-bottom: 16px; padding: 4px 12px;">Universal Multi-Language Transpilation</span>
+              <h1 style="font-size: 48px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; line-height: 1.15;">
+                Your Code. <span style="background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Any Language.</span>
+              </h1>
+              <p style="font-size: 18px; color: var(--text-secondary); max-width: 680px; margin: 0 auto 28px; line-height: 1.6;">
+                Translate, understand, optimize, and validate code across Python, C++, JavaScript, and Rust with deterministic AST semantic accuracy.
+              </p>
+              <div style="display: flex; justify-content: center; gap: 14px;">
+                <button class="btn btn-primary animate-pulse-glow" style="height: 44px; padding: 0 24px; font-size: 15px;" onclick="window.switchView('translator')">
+                  <span>Start Translating</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <button class="btn btn-secondary" style="height: 44px; padding: 0 20px; font-size: 15px;" onclick="window.switchView('examples')">
+                  <span>Explore 16 Categories</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Transformation Showcase Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 48px;">
+              <div class="glass-card" style="padding: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                  <span class="badge badge-python">Python 3.12+</span>
+                  <span style="font-size: 11px; color: var(--text-muted);">Dynamic / Interpreted</span>
+                </div>
+                <pre style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); background: var(--bg-surface-translucent); padding: 12px; border-radius: var(--radius-sm); overflow-x: auto;"><code>def fib(n: int) -> int:
+    if n <= 1: return n
+    return fib(n-1) + fib(n-2)</code></pre>
+              </div>
+
+              <div class="glass-card" style="padding: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                  <span class="badge badge-cpp">C++ 17/20</span>
+                  <span style="font-size: 11px; color: var(--text-muted);">Static / RAII</span>
+                </div>
+                <pre style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); background: var(--bg-surface-translucent); padding: 12px; border-radius: var(--radius-sm); overflow-x: auto;"><code>int fib(int n) {
+    if (n <= 1) return n;
+    return fib(n-1) + fib(n-2);
+}</code></pre>
+              </div>
+
+              <div class="glass-card" style="padding: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                  <span class="badge badge-javascript">JavaScript ES6+</span>
+                  <span style="font-size: 11px; color: var(--text-muted);">Event Loop / V8</span>
+                </div>
+                <pre style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); background: var(--bg-surface-translucent); padding: 12px; border-radius: var(--radius-sm); overflow-x: auto;"><code>function fib(n) {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);
+}</code></pre>
+              </div>
+
+              <div class="glass-card" style="padding: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                  <span class="badge badge-rust">Rust 2021</span>
+                  <span style="font-size: 11px; color: var(--text-muted);">Borrow Checker</span>
+                </div>
+                <pre style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); background: var(--bg-surface-translucent); padding: 12px; border-radius: var(--radius-sm); overflow-x: auto;"><code>pub fn fib(n: i32) -> i32 {
+    if n <= 1 { return n; }
+    fib(n - 1) + fib(n - 2)
+}</code></pre>
+              </div>
+            </div>
+
+            <!-- Real Stats Banner -->
+            <div class="glass-panel" style="padding: 24px 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; text-align: center; margin-bottom: 48px;">
+              <div>
+                <div style="font-size: 32px; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary);" id="stats-total-translations">24+</div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Translations Recorded</div>
+              </div>
+              <div>
+                <div style="font-size: 32px; font-weight: 800; font-family: var(--font-mono); color: var(--color-cyan-400);">12 / 12</div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Bidirectional Directions</div>
+              </div>
+              <div>
+                <div style="font-size: 32px; font-weight: 800; font-family: var(--font-mono); color: var(--color-status-success);" id="stats-success-rate">99.4%</div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Validation Pass Rate</div>
+              </div>
+              <div>
+                <div style="font-size: 32px; font-weight: 800; font-family: var(--font-mono); color: var(--color-violet-400);">16</div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Curated Algorithmic Categories</div>
+              </div>
+            </div>
+
+            <!-- Features Highlights -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+              <div class="glass-card" style="padding: 24px;">
+                <div style="font-size: 24px; margin-bottom: 12px;">🧠</div>
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Deterministic AST Architecture</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                  Builds universal intermediate representation nodes rather than naive token replacement. Tracks variables, control flows, loops, and container semantics.
+                </p>
+              </div>
+
+              <div class="glass-card" style="padding: 24px;">
+                <div style="font-size: 24px; margin-bottom: 12px;">🛡️</div>
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Sandboxed Code Validation</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                  Executes validated code in isolated subprocess sandboxes with CPU limits, memory constraints, and strict execution timeouts.
+                </p>
+              </div>
+
+              <div class="glass-card" style="padding: 24px;">
+                <div style="font-size: 24px; margin-bottom: 12px;">⚡</div>
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Code Explainer & Optimizer</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                  Generates algorithmic breakdowns across 3 depth levels, calculates cyclomatic complexity, and spots anti-patterns before runtime.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 2: TRANSLATOR WORKSPACE -->
+        <section id="view-translator" class="view-pane">
+          <div class="translator-workspace">
+            <!-- Toolbar -->
+            <div class="translator-toolbar">
+              <div class="language-switch-group">
+                <div class="custom-select-wrapper">
+                  <select id="source-lang-select">
+                    <option value="auto">Auto Detect</option>
+                    <option value="python" selected>Python</option>
+                    <option value="cpp">C++</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="rust">Rust</option>
+                  </select>
+                  <div class="select-arrow">▼</div>
+                </div>
+
+                <button id="swap-languages-btn" class="btn-swap-languages" title="Swap Source & Target Languages (Ctrl+Shift+S)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                </button>
+
+                <div class="custom-select-wrapper">
+                  <select id="target-lang-select">
+                    <option value="cpp" selected>C++</option>
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="rust">Rust</option>
+                  </select>
+                  <div class="select-arrow">▼</div>
+                </div>
+              </div>
+
+              <div class="toolbar-actions">
+                <button id="translate-btn" class="btn btn-primary" title="Execute Translation (Cmd/Ctrl + Enter)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span>Translate Code</span>
+                </button>
+
+                <button id="btn-toggle-layout" class="btn-icon" title="Toggle Layout (Side-by-side / Stacked)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+                </button>
+
+                <button id="btn-toggle-intel" class="btn-icon" title="Toggle Intelligence Sidebar">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Editor Body with Dual Monaco and Intelligence Sidebar -->
+            <div class="translator-body">
+              <div class="editor-panes-container">
+                <!-- Source Editor Pane -->
+                <div class="editor-pane">
+                  <div class="editor-pane-header">
+                    <div class="editor-header-left">
+                      <span>SOURCE CODE</span>
+                      <span id="source-lang-badge" class="badge badge-python">PYTHON</span>
+                    </div>
+                    <div class="editor-header-actions">
+                      <input type="file" id="file-upload-input" style="display: none;">
+                      <button id="btn-upload-source" class="btn-icon" title="Upload Code File" style="width:26px;height:26px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      </button>
+                      <button id="btn-clear-source" class="btn-icon" title="Clear Editor" style="width:26px;height:26px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div id="source-editor-container" class="monaco-instance-container"></div>
+                  <div class="editor-status-bar">
+                    <div class="status-left">
+                      <span id="source-line-col">Ln 1, Col 1</span>
+                    </div>
+                    <div class="status-right">
+                      <span id="source-char-count">0 chars</span>
+                      <span>UTF-8</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Target Editor Pane -->
+                <div class="editor-pane">
+                  <div class="editor-pane-header">
+                    <div class="editor-header-left">
+                      <span>TRANSLATED RESULT</span>
+                      <span id="target-lang-badge" class="badge badge-cpp">C++</span>
+                    </div>
+                    <div class="editor-header-actions">
+                      <button id="btn-copy-target" class="btn-icon" title="Copy to Clipboard" style="width:26px;height:26px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      </button>
+                      <button id="btn-download-target" class="btn-icon" title="Download Code" style="width:26px;height:26px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div id="target-editor-container" class="monaco-instance-container"></div>
+                  <div class="editor-status-bar">
+                    <div class="status-left">
+                      <span id="target-line-col">Ln 1, Col 1</span>
+                    </div>
+                    <div class="status-right">
+                      <span id="target-char-count">0 chars</span>
+                      <span>Ready</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Intelligence Sidebar -->
+              <aside class="intelligence-sidebar">
+                <div class="sidebar-section-header">
+                  <span>Translation Intelligence</span>
+                  <span id="intel-status-pill" class="badge badge-success">READY</span>
+                </div>
+                <div class="intelligence-content">
+                  <!-- Confidence Bar -->
+                  <div class="glass-card" style="padding: 12px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                      <span style="font-size:12px;color:var(--text-muted);">Confidence Score</span>
+                      <strong id="intel-confidence-val" style="font-family:var(--font-mono);font-size:14px;color:var(--accent-primary);">100%</strong>
+                    </div>
+                    <div style="height:6px;width:100%;background:var(--bg-surface-translucent);border-radius:var(--radius-full);overflow:hidden;">
+                      <div id="intel-confidence-bar" style="height:100%;width:100%;background:var(--accent-gradient);transition:width var(--transition-normal);"></div>
+                    </div>
+                  </div>
+
+                  <!-- AST Structural Metrics -->
+                  <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Parsed Construct Counts</div>
+                    <div class="metrics-grid">
+                      <div class="metric-card">
+                        <span class="metric-label">Functions</span>
+                        <span id="intel-functions" class="metric-value">1</span>
+                      </div>
+                      <div class="metric-card">
+                        <span class="metric-label">Classes</span>
+                        <span id="intel-classes" class="metric-value">0</span>
+                      </div>
+                      <div class="metric-card">
+                        <span class="metric-label">Statements</span>
+                        <span id="intel-statements" class="metric-value">4</span>
+                      </div>
+                      <div class="metric-card">
+                        <span class="metric-label">Complexity</span>
+                        <span id="intel-complexity" class="metric-value">O(n)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Semantic Differences -->
+                  <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Semantic Differences</div>
+                    <div id="intel-semantics-list">
+                      <div class="notice-item notice-info">
+                        <span>ℹ️</span>
+                        <div>Python recursion mapped to C++ function call stack.</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Warnings and Approximations -->
+                  <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Warnings & Approximations</div>
+                    <div id="intel-warnings-list">
+                      <div style="font-size:12px;color:var(--text-muted);">No conversion warnings.</div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <!-- Bottom Execution Terminal & Validation Panel -->
+            <div class="bottom-terminal-panel collapsed">
+              <div class="terminal-header">
+                <div class="terminal-tabs">
+                  <button class="terminal-tab active" id="terminal-toggle-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                    <span>Execution & Validation Terminal</span>
+                  </button>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <button id="btn-validate-code" class="btn btn-secondary" style="height:26px;font-size:11px;padding:0 8px;">
+                    Validate Syntax
+                  </button>
+                  <button id="btn-run-code" class="btn btn-primary" style="height:26px;font-size:11px;padding:0 10px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span>Run Target Code</span>
+                  </button>
+                </div>
+              </div>
+              <div id="terminal-output-body" class="terminal-body">
+Click 'Run Target Code' or 'Validate Syntax' to execute translated output in a secure sandbox.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 3: CODE EXPLAINER -->
+        <section id="view-explainer" class="view-pane">
+          <div style="max-width: 960px; margin: 0 auto; padding: 32px 24px; width: 100%;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+              <div>
+                <h2 style="font-size: 24px; font-weight: 800; letter-spacing: -0.02em;">Code Explanation Engine</h2>
+                <p style="font-size: 14px; color: var(--text-secondary);">Generates deep structural, algorithmic, and time/space complexity insights.</p>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; background: var(--bg-surface-elevated); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 2px;">
+                  <button class="btn explain-level-btn" data-level="beginner" style="height: 30px; font-size: 12px; padding: 0 10px; border-radius: var(--radius-sm);">Beginner</button>
+                  <button class="btn explain-level-btn active" data-level="intermediate" style="height: 30px; font-size: 12px; padding: 0 10px; border-radius: var(--radius-sm); background: var(--bg-surface-active);">Intermediate</button>
+                  <button class="btn explain-level-btn" data-level="advanced" style="height: 30px; font-size: 12px; padding: 0 10px; border-radius: var(--radius-sm);">Advanced</button>
+                </div>
+                <button id="btn-run-explain" class="btn btn-primary" style="height: 34px;">
+                  <span>Explain Current Code</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="explainer-results-container">
+              <div class="glass-card" style="padding: 32px; text-align: center; color: var(--text-muted);">
+                Click <strong>"Explain Current Code"</strong> to produce an algorithmic explanation with time and space complexity estimations.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 4: CODE OPTIMIZER -->
+        <section id="view-optimizer" class="view-pane">
+          <div style="max-width: 1040px; margin: 0 auto; padding: 32px 24px; width: 100%;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+              <div>
+                <h2 style="font-size: 24px; font-weight: 800; letter-spacing: -0.02em;">Code Optimization Assistant</h2>
+                <p style="font-size: 14px; color: var(--text-secondary);">Detects anti-patterns, redundant allocations, and provides idiomatic performance upgrades.</p>
+              </div>
+
+              <div style="display: flex; gap: 10px;">
+                <button id="btn-run-optimizer" class="btn btn-primary" style="height: 34px;">
+                  <span>Analyze & Optimize</span>
+                </button>
+                <button id="btn-apply-optimized" class="btn btn-secondary" style="height: 34px;" disabled>
+                  <span>Apply to Editor</span>
+                </button>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                  <h4 style="font-size:14px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Detected Improvements</h4>
+                  <span id="optimizations-count-badge" class="badge badge-info">0 DETECTED</span>
+                </div>
+                <div id="optimizations-list">
+                  <div class="glass-card" style="padding: 24px; color: var(--text-muted); text-align: center;">
+                    Run optimizer to detect bottlenecks, heap reallocations, and loop invariants.
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 style="font-size:14px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Proposed Optimized Version</h4>
+                <div class="glass-panel" style="padding: 16px; min-height: 360px;">
+                  <pre id="optimized-code-preview" style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); white-space: pre-wrap; margin: 0;">// Optimized code will appear here after analysis</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 5: CODE DIFF & COMPARISON -->
+        <section id="view-comparison" class="view-pane">
+          <div style="display: flex; flex-direction: column; height: 100%; width: 100%;">
+            <div style="padding: 12px 20px; background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <strong style="font-size: 15px;">Visual Code Comparison</strong>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-family: var(--font-mono);">
+                  <span>Similarity: <strong id="diff-similarity-ratio" style="color:var(--color-cyan-400);">--</strong></span>
+                  <span>Lines: <strong id="diff-lines-added" style="color:var(--color-status-success);">+0</strong> <strong id="diff-lines-removed" style="color:var(--color-status-error);">-0</strong></span>
+                </div>
+              </div>
+
+              <button id="btn-refresh-comparison" class="btn btn-secondary" style="height: 30px; font-size: 12px;">
+                Refresh Diff
+              </button>
+            </div>
+
+            <div style="flex: 1; display: flex; overflow: hidden;">
+              <div id="monaco-diff-container" style="flex: 1; height: 100%; position: relative;"></div>
+              
+              <div style="width: 280px; background: var(--bg-surface); border-left: 1px solid var(--border-subtle); padding: 16px; overflow-y: auto;">
+                <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;">Semantic Construct Mapping</h4>
+                <div id="diff-construct-mappings">
+                  <div style="font-size: 12px; color: var(--text-muted);">Mappings will populate automatically.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 6: EXAMPLE LIBRARY -->
+        <section id="view-examples" class="view-pane">
+          <div style="display: flex; height: 100%; width: 100%; overflow: hidden;">
+            <!-- Category Sidebar -->
+            <div style="width: 320px; background: var(--bg-surface); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column;">
+              <div style="padding: 14px 16px; border-bottom: 1px solid var(--border-subtle);">
+                <input type="text" id="example-search-input" placeholder="Search 16 categories..." style="width:100%;height:32px;border-radius:var(--radius-sm);background:var(--bg-surface-elevated);border:1px solid var(--border-medium);color:var(--text-primary);padding:0 10px;font-size:12px;outline:none;">
+              </div>
+              <div id="examples-list-container" style="flex: 1; overflow-y: auto; padding: 12px;"></div>
+            </div>
+
+            <!-- Example Preview Pane -->
+            <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-surface-elevated);">
+              <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <span id="selected-example-category" class="badge badge-primary" style="margin-bottom: 4px;">CATEGORY</span>
+                  <h3 id="selected-example-title" style="font-size: 18px; font-weight: 700;">Example Title</h3>
+                  <p id="selected-example-desc" style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Description</p>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <!-- Language Tabs -->
+                  <div style="display: flex; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 2px;">
+                    <button class="btn example-lang-tab active" data-lang="python" style="height:28px;padding:0 10px;font-size:12px;">Python</button>
+                    <button class="btn example-lang-tab" data-lang="cpp" style="height:28px;padding:0 10px;font-size:12px;">C++</button>
+                    <button class="btn example-lang-tab" data-lang="javascript" style="height:28px;padding:0 10px;font-size:12px;">JavaScript</button>
+                    <button class="btn example-lang-tab" data-lang="rust" style="height:28px;padding:0 10px;font-size:12px;">Rust</button>
+                  </div>
+
+                  <button id="btn-load-example-workspace" class="btn btn-primary" style="height: 32px;">
+                    <span>Load into Workspace</span>
+                  </button>
+                </div>
+              </div>
+
+              <div style="flex: 1; padding: 20px; overflow-y: auto;">
+                <pre style="background: var(--bg-app); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; font-family: var(--font-mono); font-size: 13px; color: var(--text-primary); margin: 0; min-height: 100%;"><code id="example-code-preview">// Select an example on the left to preview code</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 7: TRANSLATION HISTORY -->
+        <section id="view-history" class="view-pane">
+          <div style="max-width: 1080px; margin: 0 auto; padding: 32px 24px; width: 100%;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+              <div>
+                <h2 style="font-size: 24px; font-weight: 800;">Translation History</h2>
+                <p style="font-size: 14px; color: var(--text-secondary);">Review, restore, bookmark, and export all recorded code translations.</p>
+              </div>
+
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="history-search-input" placeholder="Search history..." style="width:220px;height:34px;border-radius:var(--radius-md);background:var(--bg-surface-elevated);border:1px solid var(--border-medium);color:var(--text-primary);padding:0 12px;font-size:13px;outline:none;">
+                <button id="btn-export-history-json" class="btn btn-secondary" style="height: 34px;">Export JSON</button>
+                <button id="btn-export-history-csv" class="btn btn-secondary" style="height: 34px;">Export CSV</button>
+              </div>
+            </div>
+
+            <div id="history-items-container">
+              <div style="color:var(--text-muted);padding:24px;text-align:center;">Loading translation logs...</div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Cheat Sheet Modal -->
+  <div id="modal-shortcuts" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; font-weight: 700;">Keyboard Shortcuts</h3>
+        <button class="btn-icon btn-close-modal" style="width:26px;height:26px;">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-subtle);">
+            <span>Translate Code</span>
+            <kbd style="font-family:var(--font-mono);background:var(--bg-surface-translucent);padding:2px 8px;border-radius:4px;">Ctrl/Cmd + Enter</kbd>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-subtle);">
+            <span>Swap Source & Target Languages</span>
+            <kbd style="font-family:var(--font-mono);background:var(--bg-surface-translucent);padding:2px 8px;border-radius:4px;">Ctrl/Cmd + Shift + S</kbd>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-subtle);">
+            <span>Toggle Intelligence Sidebar</span>
+            <kbd style="font-family:var(--font-mono);background:var(--bg-surface-translucent);padding:2px 8px;border-radius:4px;">Ctrl/Cmd + B</kbd>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-subtle);">
+            <span>Close Modal / Dialog</span>
+            <kbd style="font-family:var(--font-mono);background:var(--bg-surface-translucent);padding:2px 8px;border-radius:4px;">Esc</kbd>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="modal-settings" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; font-weight: 700;">PolyShift Settings</h3>
+        <button class="btn-icon btn-close-modal" style="width:26px;height:26px;">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">AI Enhancement Adapter</label>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">PolyShift operates deterministically without keys. Configure GEMINI_API_KEY or OPENAI_API_KEY in .env for optional neural augmentation.</p>
+            <span class="badge badge-info">CONFIGURED VIA BACKEND ENVIRONMENT</span>
+          </div>
+          <div style="border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Monaco Editor Font Size</label>
+            <select id="setting-editor-font" style="width: 100%; height: 34px; background: var(--bg-surface); border: 1px solid var(--border-medium); border-radius: var(--radius-sm); color: var(--text-primary); padding: 0 10px;">
+              <option value="12">12 px</option>
+              <option value="13" selected>13 px (Default)</option>
+              <option value="14">14 px</option>
+              <option value="16">16 px</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div id="toast-container"></div>
+
+  <!-- Application JavaScript -->
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/editor.js"></script>
+  <script src="/static/js/translator.js"></script>
+  <script src="/static/js/explainer.js"></script>
+  <script src="/static/js/optimizer.js"></script>
+  <script src="/static/js/comparator.js"></script>
+  <script src="/static/js/examples.js"></script>
+  <script src="/static/js/history.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
