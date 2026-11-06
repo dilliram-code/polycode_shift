@@ -76,7 +76,7 @@ def toggle_bookmark(record_id: int, db: Session = Depends(get_db)):
     return {"id": record.id, "is_bookmarked": record.is_bookmarked}
 
 @router.get("/history/export")
-def export_history(format: str = Query("json", regex="^(json|csv)$"), db: Session = Depends(get_db)):
+def export_history(format: str = Query("json", pattern="^(json|csv)$"), db: Session = Depends(get_db)):
     records = db.query(TranslationHistory).order_by(TranslationHistory.created_at.desc()).all()
     if format == "json":
         data = [
