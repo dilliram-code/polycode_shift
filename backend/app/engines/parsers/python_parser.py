@@ -310,3 +310,4 @@ class PythonParser(BaseParser):
             return ast.unparse(node)
         except Exception:
             return ""
+

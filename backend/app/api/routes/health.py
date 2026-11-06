@@ -28,3 +28,4 @@ def health_check():
         "compilers_detected": compilers,
         "ai_integration": ai_provider.get_status()
     }
+

@@ -257,3 +257,4 @@ class RustParser(BaseParser):
             return ArrayAccess(array=Identifier(m_idx.group(1)), index=self._parse_expr_str(m_idx.group(2)))
 
         return Identifier(name=s)
+

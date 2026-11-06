@@ -95,3 +95,4 @@ def test_validate_api():
     resp = client.post("/api/v1/validate", json=payload)
     assert resp.status_code == 200
     assert resp.json()["valid"] is True
+

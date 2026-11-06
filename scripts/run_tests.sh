@@ -12,3 +12,4 @@ fi
 export PYTHONPATH="$DIR/backend"
 echo "Executing PolyShift test suite with pytest..."
 pytest backend/tests/ -v --tb=short
+

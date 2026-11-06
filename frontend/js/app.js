@@ -183,3 +183,4 @@ window.switchView = function(viewName) {
 window.addEventListener('DOMContentLoaded', () => {
   window.appInstance = new App();
 });
+

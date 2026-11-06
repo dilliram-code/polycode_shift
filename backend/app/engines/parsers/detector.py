@@ -84,3 +84,4 @@ def detect_language(code: str) -> Tuple[str, float]:
 
     confidence = min(round(scores[best_lang] / max(total_score, 1), 2), 0.99)
     return best_lang, confidence
+

@@ -34,3 +34,4 @@ def get_platform_stats(db: Session = Depends(get_db)):
         "bidirectional_directions_count": 12,
         "language_distribution": lang_distribution
     }
+

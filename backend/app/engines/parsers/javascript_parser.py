@@ -272,3 +272,4 @@ class JavaScriptParser(BaseParser):
             return ArrayAccess(array=Identifier(name=arr_name), index=idx_expr)
 
         return Identifier(name=s)
+

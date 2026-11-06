@@ -68,3 +68,4 @@ async def translate_code(req: TranslationRequest, db: Session = Depends(get_db))
         ast_summary=result["ast_summary"],
         history_id=history_record.id
     )
+

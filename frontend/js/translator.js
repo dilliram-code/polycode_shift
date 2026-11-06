@@ -358,3 +358,4 @@ class TranslatorController {
 }
 
 window.translatorController = new TranslatorController();
+

@@ -76,3 +76,4 @@ class ComparatorController {
 }
 
 window.comparatorController = new ComparatorController();
+

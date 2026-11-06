@@ -156,3 +156,4 @@ def get_example_by_id(example_id: int):
         if e["id"] == example_id:
             return ExampleResponse(**e)
     return ExampleResponse(**CURATED_EXAMPLES[0])
+

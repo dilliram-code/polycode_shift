@@ -111,3 +111,4 @@ class HistoryController {
 }
 
 window.historyController = new HistoryController();
+

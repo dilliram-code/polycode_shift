@@ -225,3 +225,4 @@ class RustGenerator(BaseGenerator):
             return f"Vec<{elem}>"
         if t.kind == DataType.CUSTOM: return t.custom_name or "String"
         return "i32"
+

@@ -14,3 +14,4 @@ async def optimize(req: OptimizeRequest):
     
     result = optimize_code(req.code, req.language)
     return OptimizeResponse(**result)
+

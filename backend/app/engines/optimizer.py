@@ -97,3 +97,4 @@ def optimize_code(code: str, language: str) -> Dict[str, Any]:
         "original_code": code,
         "suggested_code": optimized_code
     }
+

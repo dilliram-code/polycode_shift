@@ -52,3 +52,4 @@ PYTHONPATH=backend pytest backend/tests/ -v
 
 - Follow **PEP 8** for all Python code.
 - Keep frontend vanilla ES6+ modular and maintain clean CSS variables for theming.
+

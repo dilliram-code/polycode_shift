@@ -286,3 +286,4 @@ class TranslationEngine:
 
 # Global singleton
 translator_engine = TranslationEngine()
+

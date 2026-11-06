@@ -122,3 +122,4 @@ Managed via SQLAlchemy for SQLite initially, designed for seamless PostgreSQL mi
   - `javascript_code` (Text)
   - `rust_code` (Text)
   - `difficulty` (String)
+

@@ -14,3 +14,4 @@ async def analyze_code(req: AnalyzeRequest):
     
     metrics = analyze_code_metrics(req.code, req.language)
     return AnalyzeResponse(**metrics)
+

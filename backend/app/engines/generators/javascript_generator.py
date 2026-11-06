@@ -217,3 +217,4 @@ class JavaScriptGenerator(BaseGenerator):
             return f"({self._gen_expr(expr.condition)} ? {self._gen_expr(expr.true_expr)} : {self._gen_expr(expr.false_expr)})"
 
         return ""
+

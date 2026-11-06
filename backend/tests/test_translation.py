@@ -90,3 +90,4 @@ def test_auto_detection():
 def test_ast_summary_statistics():
     result = translator_engine.translate(SAMPLE_PYTHON, "python", "javascript")
     assert result["ast_summary"]["functions_count"] >= 1
+

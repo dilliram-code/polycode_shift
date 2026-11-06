@@ -108,3 +108,4 @@ def analyze_code_metrics(code: str, language: str) -> Dict[str, Any]:
         "complexity_rating": complexity_rating,
         "diagnostics": diagnostics
     }
+

@@ -14,3 +14,4 @@ class BaseGenerator(ABC):
     def generate(self, program: Program) -> str:
         """Translates an IR Program into target language source code."""
         pass
+

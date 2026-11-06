@@ -16,3 +16,4 @@ async def compare(req: CompareRequest):
         req.target_language
     )
     return CompareResponse(**result)
+

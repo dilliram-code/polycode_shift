@@ -151,3 +151,4 @@ class ExampleResponse(BaseModel):
     javascript_code: str
     rust_code: str
     difficulty: str
+

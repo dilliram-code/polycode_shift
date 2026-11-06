@@ -267,3 +267,4 @@ class PythonGenerator(BaseGenerator):
         if t.kind == DataType.DICT: return "dict"
         if t.kind == DataType.CUSTOM: return t.custom_name or "Any"
         return "Any"
+

@@ -253,3 +253,4 @@ class CppGenerator(BaseGenerator):
         if t.kind == DataType.DICT: return "std::map<std::string, auto>"
         if t.kind == DataType.CUSTOM: return t.custom_name or "auto"
         return "auto"
+

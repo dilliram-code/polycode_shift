@@ -49,3 +49,4 @@ class ThemeManager {
 }
 
 window.themeManager = new ThemeManager();
+

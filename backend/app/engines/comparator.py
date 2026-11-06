@@ -64,3 +64,4 @@ def compare_code_snippets(
         "unified_diff": "\n".join(diff_lines),
         "construct_mappings": construct_mappings
     }
+

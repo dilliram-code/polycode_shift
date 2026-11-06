@@ -13,3 +13,4 @@ fi
 export PYTHONPATH="$DIR/backend"
 echo "Starting PolyShift server on http://localhost:8000 ..."
 python3 -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 --reload
+

@@ -20,3 +20,4 @@ class BaseParser(ABC):
     def validate_syntax(self, code: str) -> tuple[bool, List[str]]:
         """Validates source syntax. Returns (is_valid, list_of_errors)."""
         pass
+

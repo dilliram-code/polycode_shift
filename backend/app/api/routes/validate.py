@@ -11,3 +11,4 @@ router = APIRouter()
 async def validate(req: ValidateRequest):
     result = validate_code(req.code, req.language)
     return ValidateResponse(**result)
+

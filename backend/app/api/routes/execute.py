@@ -11,3 +11,4 @@ router = APIRouter()
 async def execute(req: ExecuteRequest):
     result = execute_code(req.code, req.language)
     return ExecuteResponse(**result)
+
