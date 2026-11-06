@@ -26,7 +26,7 @@ def get_db():
         db.close()
 
 def init_db():
+    import app.database.models  # Ensure models are registered on Base.metadata
     Base.metadata.create_all(bind=engine)
 
-# Auto-initialize database tables on module load
 init_db()
